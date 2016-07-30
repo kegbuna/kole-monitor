@@ -1,3 +1,3 @@
 {
-  "entry": "https://${user}:${apiKey}@api.koleimports.com"
+  "links": "https://${user}:${apiKey}@api.koleimports.com"
 }
