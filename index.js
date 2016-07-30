@@ -1,4 +1,5 @@
 const apiConfig = require('./config/api.json');
+const dbConfig = require('../config/database.json');
 const logger = require('log4js').getLogger('Kole Runner');
 logger.setLevel('DEBUG');
 
@@ -12,8 +13,3 @@ const config = {
 
 const koleUrl = _.template(apiConfig.entry)(config);
 
-logger.debug(`Base URL is ${koleUrl}`);
-
-request(koleUrl, null, (err, response, body) => {
-  logger.debug(`Response returned: ${body}`);
-});
