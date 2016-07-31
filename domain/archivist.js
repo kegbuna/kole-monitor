@@ -1,27 +1,28 @@
-const mysql = require('mysql');
 const logger = require('log4js').getLogger('Archivist');
+const models = require('./models');
+const Sequelize = require('sequelize');
 
-module.exports = class Archivist {
+/**
+ * The DB Abstraction class
+ */
+class Archivist {
   constructor(config) {
-    this.connection = mysql.createConnection({
+    this.sequelize = new Sequelize(config.database, config.user, config.password, {
       host: config.host,
-      database: config.database,
-      user: config.user,
-      password: config.password,
+      dialect: 'mysql',
     });
+
+
   }
 
   getRecords(query) {
-    const queryString = query.string || '*';
-    this.connection.query(`SELECT ${queryString} from ${query.table}`, (err, rows, fields) => {
-      if (err) {
-        throw err;
-      }
-      logger.debug(rows);
-      logger.debug(fields);
-    });
-
-    this.connection.end();
+    this.sequelize.authenticate().then((err) => {
+      logger.debug('All good.');
+    })
+      .catch((err) => {
+        logger.fatal("Can't connect to db");
+        logger.fatal(err);
+      });
   }
 
   /**
@@ -42,4 +43,6 @@ module.exports = class Archivist {
       });
     });
   }
-};
+}
+
+module.exports = Archivist;
