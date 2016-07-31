@@ -2,14 +2,24 @@ const logger = require('log4js').getLogger('Archivist');
 const models = require('./models');
 const EventEmitter = require('events').EventEmitter;
 const eventEmitter = new EventEmitter();
+const Promise = require('bluebird');
+
 /**
  * The DB Abstraction class
  */
 class Archivist {
   constructor() {
-    models.sequelize.sync().then(() => {
-      logger.info('Models synced. We\'re ready to go.');
-      eventEmitter.emit('ready', this);
+    this.models = models;
+  }
+
+  init() {
+    return new Promise((resolve, reject) => {
+      this.models.sequelize.sync().then(() => {
+        logger.info('Models synced. We\'re ready to go.');
+        resolve();
+      }, () => {
+        reject();
+      });
     });
   }
 
