@@ -24,8 +24,8 @@ function Product(sequelize, DataTypes) {
     inventory: DataTypes.INTEGER,
     is_closeout: DataTypes.INTEGER,
     unit_weight: DataTypes.DECIMAL,
-    //created: DataTypes.DATE,
-    //modified: DataTypes.DATE,
+    created: DataTypes.DATE,
+    modified: DataTypes.DATE,
   }, {
     classMethods: {
       associate: function (models) {
