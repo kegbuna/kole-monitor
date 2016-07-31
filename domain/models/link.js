@@ -12,8 +12,8 @@ function Link(sequelize, DataTypes) {
     url: DataTypes.STRING,
   }, {
     classMethods: {
-      associate: models => {
-        Model.hasOne(models.Product);
+      associate: function(models) {
+        Model.belongsTo(models.Product);
       },
     },
   });

@@ -22,5 +22,3 @@ dbConfig.user = process.env.kole_db_user;
 dbConfig.password = process.env.kole_db_password;
 
 const kole = new Archivist(dbConfig);
-
-kole.getRecords();

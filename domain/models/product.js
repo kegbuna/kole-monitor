@@ -15,7 +15,7 @@ function Product(sequelize, DataTypes) {
     brand: DataTypes.STRING,
     colors: DataTypes.STRING,
     materials: DataTypes.STRING,
-    attributes: DataTypes.STRING,
+    attribute_list: DataTypes.STRING,
     tags: DataTypes.STRING,
     category_id: DataTypes.INTEGER,
     category: DataTypes.STRING,
@@ -24,11 +24,11 @@ function Product(sequelize, DataTypes) {
     inventory: DataTypes.INTEGER,
     is_closeout: DataTypes.INTEGER,
     unit_weight: DataTypes.DECIMAL,
-    created: DataTypes.DATE,
-    modified: DataTypes.DATE,
+    //created: DataTypes.DATE,
+    //modified: DataTypes.DATE,
   }, {
     classMethods: {
-      associate: models => {
+      associate: function (models) {
         Model.hasMany(models.Image);
         Model.hasMany(models.Tier);
         Model.hasMany(models.Link);
