@@ -1,4 +1,5 @@
 {
   "host"     : "theinternetgangster.com",
-  "database" : "brick13_koleimport"
+  "database" : "brick13_koleimport",
+  "dialect" : "mysql"
 }

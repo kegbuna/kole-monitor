@@ -1,5 +1,5 @@
 /**
- * The Image model
+ * The Product Image model
  * @param sequelize
  * @param DataTypes
  * @returns {*|{}|Model|void}
