@@ -13,9 +13,7 @@ function Sale(sequelize, DataTypes) {
     end_date: DataTypes.DATE,
   }, {
     classMethods: {
-      associate: function(models) {
-        Model.belongsTo(models.Product);
-      },
+      associate: models => Model.belongsTo(models.Product),
     },
   });
 

@@ -11,9 +11,7 @@ function Image(sequelize, DataTypes) {
     url: DataTypes.STRING,
   }, {
     classMethods: {
-      associate: function(models) {
-        Model.belongsTo(models.Product);
-      },
+      associate: models => Model.belongsTo(models.Product),
     },
   });
   return Model;

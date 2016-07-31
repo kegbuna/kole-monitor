@@ -10,9 +10,7 @@ function Tier(sequelize, DataTypes) {
     price: DataTypes.DOUBLE,
   }, {
     classMethods: {
-      associate: function(models) {
-        Model.belongsTo(models.Product);
-      },
+      associate: models => Model.belongsTo(models.Product),
     },
   });
   return Model;

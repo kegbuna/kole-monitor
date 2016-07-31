@@ -28,7 +28,7 @@ function Product(sequelize, DataTypes) {
     modified: DataTypes.DATE,
   }, {
     classMethods: {
-      associate: function (models) {
+      associate: models => {
         Model.hasMany(models.Image);
         Model.hasMany(models.Tier);
         Model.hasMany(models.Link);
