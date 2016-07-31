@@ -1,3 +1,10 @@
 {
-  "links": "https://${user}:${apiKey}@api.koleimports.com"
+  "requests": {
+    "links" : {
+      "urlTemplate": "https://${user}:${apiKey}@api.koleimports.com",
+      "headers" : {
+        "Accept" : "application/vnd.koleimports.ds.link+json"
+      }
+    }
+  }
 }

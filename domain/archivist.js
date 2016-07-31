@@ -1,14 +1,15 @@
 const logger = require('log4js').getLogger('Archivist');
 const models = require('./models');
-const Sequelize = require('sequelize');
-
+const EventEmitter = require('events').EventEmitter;
+const eventEmitter = new EventEmitter();
 /**
  * The DB Abstraction class
  */
 class Archivist {
-  constructor(config) {
+  constructor() {
     models.sequelize.sync().then(() => {
-      logger.debug('Models synced. We\'re ready to go.');
+      logger.info('Models synced. We\'re ready to go.');
+      eventEmitter.emit('ready', this);
     });
   }
 
