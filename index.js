@@ -51,7 +51,12 @@ function getNextProducts(resolve, reject) {
   logger.debug('Retrieving more products.');
   koleResearcher.useLink('listNextProducts').then((result) => {
     const moreProducts = extractProducts(result);
-    koleArchivist.saveCollection('Product', moreProducts);
+    koleArchivist.saveCollection('Product', moreProducts)
+      .then(() => {
+        logger.info('Saved Next Products.');
+      }, (err) => {
+        logger.error(`Aw what the hell ${err}`);
+      });
     const linkIndex = hasMoreProducts(result);
     if (linkIndex > -1) {
       koleResearcher.createLink(result.products.links[linkIndex]);

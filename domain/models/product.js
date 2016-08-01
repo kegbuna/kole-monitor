@@ -8,7 +8,7 @@
 function Product(sequelize, DataTypes) {
   const Model = sequelize.define('Product', {
     sku: DataTypes.STRING,
-    upc: DataTypes.INTEGER,
+    upc: DataTypes.BIGINT,
     title: DataTypes.STRING,
     description: DataTypes.TEXT,
     type: DataTypes.STRING,
