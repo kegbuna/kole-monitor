@@ -42,18 +42,40 @@ class Researcher {
 
   createLinks(links) {
     links.forEach((value) => {
-      this.requests[value.method] = {};
-      this.requests[value.method].url = value.url;
-      this.requests[value.method].headers = {
-        Accept: value.media_type,
-      };
-      this.requests[value.method].auth = {
-        user: this.config.user,
-        pass: this.config.apiKey,
-      };
+      this.createLink(value);
     });
-
     logger.debug(`Links created: ${Object.keys(this.requests).join(',')}`);
+  }
+
+  createLink(link) {
+    this.requests[link.method] = {};
+    // have to manually replace &amp;, lame
+    this.requests[link.method].url = decodeURIComponent(link.url).replace(/&amp;/g, '&');
+
+    this.requests[link.method].headers = {
+      Accept: link.media_type,
+    };
+    this.requests[link.method].auth = {
+      user: this.config.user,
+      pass: this.config.apiKey,
+    };
+  }
+
+  useLink(linkName) {
+    return new Promise((resolve, reject) => {
+      logger.debug(`Attempting to use: ${JSON.stringify(this.requests[linkName])}`);
+      request.get(this.requests[linkName], (err, response, body) => {
+        if (err) {
+          throw err;
+        }
+        if (response.statusCode !== 200) {
+          logger.error('Bad response received.');
+          reject();
+        } else {
+          resolve(JSON.parse(body));
+        }
+      });
+    });
   }
 }
 

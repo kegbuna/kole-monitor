@@ -15,7 +15,10 @@ function Product(sequelize, DataTypes) {
     brand: DataTypes.STRING,
     colors: DataTypes.STRING,
     materials: DataTypes.STRING,
-    attribute_list: DataTypes.STRING,
+    attribute_list: {
+      type: DataTypes.STRING,
+      field: 'attributes',
+    },
     tags: DataTypes.STRING,
     category_id: DataTypes.INTEGER,
     category: DataTypes.STRING,

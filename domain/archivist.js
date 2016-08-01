@@ -14,7 +14,7 @@ class Archivist {
 
   init() {
     return new Promise((resolve, reject) => {
-      this.models.sequelize.sync().then(() => {
+      this.models.sequelize.sync({force: true}).then(() => {
         logger.info('Models synced. We\'re ready to go.');
         resolve();
       }, () => {
@@ -29,10 +29,14 @@ class Archivist {
 
   /**
    * Saves a result set from the api
+   * @param {string} modelName
    * @param {object} collection The results
    */
-  saveCollection(collection) {
-
+  saveCollection(modelName, collection) {
+    logger.info(`Attempting to save ${modelName}`);
+    return this.models[modelName].bulkCreate(collection).then((instance) => {
+      logger.info('Successfully saved collection.');
+    });
   }
 }
 
