@@ -17,14 +17,19 @@ const koleResearcher = new Researcher();
 
 // utility stuff
 function researchProducts() {
-  return koleResearcher.useLink('listProducts').then((result) => {
-    const products = extractProducts(result);
-
-    koleArchivist.saveCollection('Product', products).then((saveResult) => {
-      if (result.products.links && result.products.links[0].method === 'listNextProducts') {
-        koleResearcher.createLink(result.products.links[0]);
-        return getNextProducts();
+  return new Promise((resolve, reject) => {
+    koleResearcher.useLink('listProducts').then((result) => {
+      const products = extractProducts(result);
+      koleArchivist.saveCollection('Product', products);
+      const linkIndex = hasMoreProducts(result);
+      if (linkIndex > -1) {
+        koleResearcher.createLink(result.products.links[linkIndex]);
+        getNextProducts(resolve, reject);
+      } else {
+        resolve('We did it! We now have a bunch of products. Better reporting to come.');
       }
+    }, (err) => {
+      reject(err);
     });
   });
 }
@@ -42,18 +47,36 @@ function extractProducts(result) {
   }, []);
 }
 
-function getNextProducts(previousCall) {
+function getNextProducts(resolve, reject) {
   logger.debug('Retrieving more products.');
-  return koleResearcher.useLink('listNextProducts').then((nextResult) => {
-    const moreProducts = extractProducts(nextResult);
-    koleArchivist.saveCollection('Product', moreProducts).then(() => {
-
-    });
+  koleResearcher.useLink('listNextProducts').then((result) => {
+    const moreProducts = extractProducts(result);
+    koleArchivist.saveCollection('Product', moreProducts);
+    const linkIndex = hasMoreProducts(result);
+    if (linkIndex > -1) {
+      koleResearcher.createLink(result.products.links[linkIndex]);
+      getNextProducts(resolve, reject);
+    } else {
+      resolve();
+    }
+  }, (err) => {
+    reject(err);
   });
+}
+
+function hasMoreProducts(result) {
+  if (result.products.links) {
+    return _.findIndex(result.products.links, {method: 'listNextProducts'});
+  }
+  return -1;
 }
 
 // main
 Promise.all([koleArchivist.init(), koleResearcher.init()]).then(() => {
   logger.info('Everyone is ready. Starting up operations.');
-  researchProducts();
+  researchProducts().then((result) => {
+    logger.info(`Research complete: ${result}`);
+  }, (err) => {
+    logger.error(`Damn: ${err}`);
+  });
 });
