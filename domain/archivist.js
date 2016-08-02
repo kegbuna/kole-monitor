@@ -14,10 +14,11 @@ class Archivist {
 
   init() {
     return new Promise((resolve, reject) => {
-      this.models.sequelize.sync({force: true}).then(() => {
+      this.models.sequelize.sync().then(() => {
         logger.info('Models synced. We\'re ready to go.');
         resolve();
-      }, () => {
+      }, (err) => {
+        logger.fatal(`Something went wrong. Unable to sync with db: ${err.name}, message: ${err.message}`);
         reject();
       });
     });

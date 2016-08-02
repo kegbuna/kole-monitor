@@ -84,4 +84,7 @@ Promise.all([koleArchivist.init(), koleResearcher.init()]).then(() => {
   }, (err) => {
     logger.error(`Damn: ${err}`);
   });
+}, (err) => {
+  logger.fatal('One or more classes failed to init. Check the logs. Quitting.');
+  process.exit(1);
 });
