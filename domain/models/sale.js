@@ -11,6 +11,9 @@ function Sale(sequelize, DataTypes) {
     sale_name: DataTypes.STRING,
     start_date: DataTypes.DATE,
     end_date: DataTypes.DATE,
+    upc: {
+      type: DataTypes.BIGINT,
+    },
   }, {
     classMethods: {
       associate: models => Model.belongsTo(models.Product),

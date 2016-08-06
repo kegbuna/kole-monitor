@@ -21,6 +21,7 @@ function researchProducts() {
     koleResearcher.useLink('listProducts').then((result) => {
       const products = extractProducts(result);
       koleArchivist.saveCollection('Product', products);
+
       const linkIndex = hasMoreProducts(result);
       if (linkIndex > -1) {
         koleResearcher.createLink(result.products.links[linkIndex]);
@@ -71,9 +72,17 @@ function getNextProducts(resolve, reject) {
 
 function hasMoreProducts(result) {
   if (result.products.links) {
-    return _.findIndex(result.products.links, {method: 'listNextProducts'});
+    return _.findIndex(result.products.links, { method: 'listNextProducts' });
   }
   return -1;
+}
+
+function saveProducts(products) {
+  koleArchivist.saveCollection('Product', products).then(() => {
+    _.each(products, (value) => {
+
+    });
+  });
 }
 
 // main

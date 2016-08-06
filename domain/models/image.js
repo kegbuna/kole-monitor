@@ -9,6 +9,9 @@ function Image(sequelize, DataTypes) {
   const Model = sequelize.define('Image', {
     size: DataTypes.STRING,
     url: DataTypes.STRING,
+    upc: {
+      type: DataTypes.BIGINT,
+    },
   }, {
     classMethods: {
       associate: models => Model.belongsTo(models.Product),

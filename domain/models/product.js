@@ -7,8 +7,14 @@
  */
 function Product(sequelize, DataTypes) {
   const Model = sequelize.define('Product', {
-    sku: DataTypes.STRING,
-    upc: DataTypes.BIGINT,
+    sku: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
+    upc: {
+      type: DataTypes.BIGINT,
+      unique: true,
+    },
     title: DataTypes.STRING,
     description: DataTypes.TEXT,
     type: DataTypes.STRING,

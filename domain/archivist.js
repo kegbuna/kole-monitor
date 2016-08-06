@@ -31,11 +31,25 @@ class Archivist {
    * Saves a result set from the api
    * @param {string} modelName
    * @param {object} collection The results
+   * @returns {Promise.<TResult>}
    */
   saveCollection(modelName, collection) {
     logger.info(`Attempting to save ${modelName}`);
     return this.models[modelName].bulkCreate(collection).then((instance) => {
       logger.info('Successfully saved collection.');
+    });
+  }
+
+  /**
+   * Saves a single record
+   * @param {string} modelName The model's ame
+   * @param {object} object The object to be saved
+   * @returns {Promise.<TResult>}
+   */
+  saveRecord(modelName, object) {
+    logger.info(`Attempting to save a single ${modelName}.`);
+    return this.models[modelName].create(object).then((instance) => {
+      logger.info(`Successfully saved ${modelName}`);
     });
   }
 }
