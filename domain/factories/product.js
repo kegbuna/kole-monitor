@@ -12,13 +12,20 @@ class ProductFactory {
       throw new Error('Argument type is wrong.');
     }
 
-    if (Array.isArray(productJson)) {
-      return productJson.map((value) => {
-        return this.getProduct(value);
-      });
-    }
+    const products = {
+      table: 'Products',
+      data: [],
+    };
 
-    return [this.getProduct(productJson)];
+    if (Array.isArray(productJson) || productJson.hasOwnProperty(0)) {
+      _.each(productJson, (value) => {
+        products.data.push(this.getProduct(value));
+      });
+    } else {
+      products.data.push(this.getProduct(productJson));
+    }
+    logger.debug(`New product array created with ${products.length} products.`);
+    return products;
   }
 
   /**
@@ -30,14 +37,16 @@ class ProductFactory {
     return new ProductModel(productJson);
   }
 }
-
+/**
+ *
+ */
 class ProductModel {
   constructor(data) {
     const fields = Object.keys(data);
 
     for (let i = 0; i < fields.length; i++) {
-      let field = fields[i];
-      let fieldValue = data[field];
+      const field = fields[i];
+      const fieldValue = data[field];
 
       if (typeof fieldValue !== 'object') {
         this[field] = fieldValue;
@@ -45,20 +54,35 @@ class ProductModel {
     }
 
     this.associations = {
-      images: [],
-      links: [],
-      tiers: [],
+      images: {
+        table: 'Images',
+        data: [],
+      },
+      links: {
+        table: 'Links',
+        data: [],
+      },
+      tiers: {
+        table: 'Tiers',
+        data: [],
+      },
     };
 
     const assocTypes = Object.keys(this.associations);
     for (let i = 0; i < assocTypes.length; i++) {
-      _.each(data[assocTypes[i]], (value) => {
-        this.associations.images.push(new AssociationModel(data.upc, value));
+      const assocType = assocTypes[i];
+      _.each(data[assocType], (value) => {
+        this.associations[assocType].data.push(new AssociationModel(data.upc, value));
       });
     }
     if (data.sale) {
-      this.associations.sale = {};
-      _.extend(this.associations.sale, data.sale);
+      this.associations.sale = {
+        table: 'Sale',
+        data: {
+          upc: data.upc,
+        },
+      };
+      _.extend(this.associations.sale.data, data.sale);
     }
   }
 }
@@ -69,3 +93,5 @@ class AssociationModel {
     _.extend(this, data);
   }
 }
+
+module.exports = ProductFactory;

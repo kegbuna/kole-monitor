@@ -7,6 +7,7 @@ const Archivist = require('./domain/archivist');
 const Researcher = require('./domain/researcher');
 const Promise = require('bluebird');
 const _ = require('lodash');
+const ProductFactory = require('./domain/factories/product');
 
 // Get some instances up
 logger.debug('Initializing Archivist.');
@@ -36,13 +37,14 @@ function researchProducts() {
 }
 
 function extractProducts(result) {
-  return _.reduce(result.products, (collection, value, key) => {
-    let newValue = value;
+  const products = ProductFactory.getProducts(result.products);
+  return _.reduce(products, (collection, value, key) => {
+    const newValue = value;
     // weird bug with sequelize i can't have a model with attributes as an attribute
     newValue.attribute_list = value.attributes;
 
     if (!isNaN(key)) {
-      collection.push(newValue);
+      collection.push();
     }
     return collection;
   }, []);
