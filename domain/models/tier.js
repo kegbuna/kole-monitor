@@ -1,7 +1,7 @@
 /**
  * Price Tier model
- * @param sequelize
- * @param DataTypes
+ * @param {Sequelize} sequelize
+ * @param {object} DataTypes
  * @constructor
  */
 function Tier(sequelize, DataTypes) {
