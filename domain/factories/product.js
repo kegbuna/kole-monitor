@@ -18,8 +18,10 @@ class ProductFactory {
     };
 
     if (Array.isArray(productJson) || productJson.hasOwnProperty(0)) {
-      _.each(productJson, (value) => {
-        products.data.push(this.getProduct(value));
+      _.each(productJson, (value, index) => {
+        if (!isNaN(index)) {
+          products.data.push(this.getProduct(value));
+        }
       });
     } else {
       products.data.push(this.getProduct(productJson));

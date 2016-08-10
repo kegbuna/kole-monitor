@@ -17,13 +17,18 @@ logger.debug('Initializing Researcher.');
 const koleResearcher = new Researcher();
 
 // utility stuff
+
+function processProductResult(result) {
+  const products = extractProducts(result);
+  koleArchivist.saveCollection('Product', products);
+
+  return hasMoreProducts(result);
+}
+
 function researchProducts() {
   return new Promise((resolve, reject) => {
     koleResearcher.useLink('listProducts').then((result) => {
-      const products = extractProducts(result);
-      koleArchivist.saveCollection('Product', products);
-
-      const linkIndex = hasMoreProducts(result);
+      const linkIndex = processProductResult(result);
       if (linkIndex > -1) {
         koleResearcher.createLink(result.products.links[linkIndex]);
         getNextProducts(resolve, reject);
@@ -38,13 +43,13 @@ function researchProducts() {
 
 function extractProducts(result) {
   const products = ProductFactory.getProducts(result.products);
-  return _.reduce(products, (collection, value, key) => {
+  return _.reduce(products.data, (collection, value, key) => {
     const newValue = value;
     // weird bug with sequelize i can't have a model with attributes as an attribute
     newValue.attribute_list = value.attributes;
 
     if (!isNaN(key)) {
-      collection.push();
+      collection.push(newValue);
     }
     return collection;
   }, []);
@@ -53,14 +58,7 @@ function extractProducts(result) {
 function getNextProducts(resolve, reject) {
   logger.debug('Retrieving more products.');
   koleResearcher.useLink('listNextProducts').then((result) => {
-    const moreProducts = extractProducts(result);
-    koleArchivist.saveCollection('Product', moreProducts)
-      .then(() => {
-        logger.info('Saved Next Products.');
-      }, (err) => {
-        logger.error(`Aw what the hell ${err}`);
-      });
-    const linkIndex = hasMoreProducts(result);
+    const linkIndex = processProductResult(result);
     if (linkIndex > -1) {
       koleResearcher.createLink(result.products.links[linkIndex]);
       getNextProducts(resolve, reject);

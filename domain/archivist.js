@@ -31,12 +31,18 @@ class Archivist {
   /**
    * Saves a result set from the api
    * @param {string} modelName
-   * @param {object} collection The results
+   * @param {Product[]} collection The results
    * @returns {Promise.<TResult>}
    */
   saveCollection(modelName, collection) {
     logger.info(`Attempting to save ${modelName}`);
     return this.models[modelName].bulkCreate(collection).then((instance) => {
+      const sup = arguments;
+      for (let key of collection.associations) {
+        let tableName = collection.associations[key].table;
+        this.models[tableName].bulkCreate(collection.associations[key].data);
+      }
+
       logger.info('Successfully saved collection.');
     });
   }
