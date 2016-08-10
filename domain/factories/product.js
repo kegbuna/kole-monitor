@@ -57,15 +57,15 @@ class ProductModel {
 
     this.associations = {
       images: {
-        table: 'Images',
+        model: 'Image',
         data: [],
       },
       links: {
-        table: 'Links',
+        model: 'Link',
         data: [],
       },
       tiers: {
-        table: 'Tiers',
+        model: 'Tier',
         data: [],
       },
     };
@@ -79,7 +79,7 @@ class ProductModel {
     }
     if (data.sale) {
       this.associations.sale = {
-        table: 'Sale',
+        model: 'Sale',
         data: {
           upc: data.upc,
         },

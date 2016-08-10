@@ -3,6 +3,7 @@ const models = require('./models');
 const EventEmitter = require('events').EventEmitter;
 const eventEmitter = new EventEmitter();
 const Promise = require('bluebird');
+const _ = require('lodash');
 
 /**
  * The DB Abstraction class
@@ -14,7 +15,7 @@ class Archivist {
 
   init() {
     return new Promise((resolve, reject) => {
-      this.models.sequelize.sync().then(() => {
+      this.models.sequelize.sync({force: true}).then(() => {
         logger.info('Models synced. We\'re ready to go.');
         resolve();
       }, (err) => {
@@ -38,10 +39,17 @@ class Archivist {
     logger.info(`Attempting to save ${modelName}`);
     return this.models[modelName].bulkCreate(collection).then((instance) => {
       const sup = arguments;
-      for (let key of collection.associations) {
-        let tableName = collection.associations[key].table;
-        this.models[tableName].bulkCreate(collection.associations[key].data);
-      }
+      _.each(collection, (product) => {
+        _.each(product.associations, (value) => {
+          let modelName = value.model;
+          if (Array.isArray(value.data)) {
+            this.models[modelName].bulkCreate(value.data);
+          }
+          else {
+            this.models[modelName].create(value.data);
+          }
+        });
+      });
 
       logger.info('Successfully saved collection.');
     });
