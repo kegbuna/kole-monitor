@@ -12,5 +12,5 @@ deployment:
           revision_type: S3
           s3_location:
             bucket: kole-monitor-revisions
-            key_pattern: appname-1234-{BRANCH}-{SHORT_COMMIT}
+            key_pattern: kole-monitor-{BRANCH}-{SHORT_COMMIT}
         deployment_group: kole-monitor-deployments
