@@ -22,5 +22,9 @@
     "mysql": "^2.11.1",
     "request": "^2.74.0",
     "sequelize": "^3.23.6"
+  },
+  "dependencies": {
+    "magento2-swagger": "0.0.8",
+    "swagger-client": "^2.1.18"
   }
 }

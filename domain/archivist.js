@@ -25,8 +25,8 @@ class Archivist {
     });
   }
 
-  getRecords(query) {
-
+  getProducts(query) {
+    return this.models.Product.findAll(query);
   }
 
   /**
